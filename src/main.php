@@ -267,11 +267,11 @@ readonly class CustomClassProperty {
         $stringifiedAnnotationEntries = trim($stringifiedAnnotationEntries);
 
         // For create
-        $stringifiedCreateProperties = "";
-        foreach ($this->properties as $property) {
-            $stringifiedCreateProperties .= $padding8.$property->toStringForCreate().PHP_EOL;
-        }
-        $stringifiedCreateProperties = trim($stringifiedCreateProperties);
+        // $stringifiedCreateProperties = "";
+        // foreach ($this->properties as $property) {
+        //     $stringifiedCreateProperties .= $padding8.$property->toStringForCreate().PHP_EOL;
+        // }
+        // $stringifiedCreateProperties = trim($stringifiedCreateProperties);
 
         // For new self
         $stringifiedNewSelfParameters = "";
@@ -293,19 +293,29 @@ readonly class CustomClassProperty {
 
         $className = convertSnakeToPascal($this->className);
 
+        // return <<<PHP
+        //     class {$className} {
+        //         /**
+        //          $stringifiedAnnotationEntries
+        //          */
+        //         public static function create(
+        //             $stringifiedCreateProperties
+        //         ):self {
+        //             return new self(
+        //                 $stringifiedNewSelfParameters
+        //             );
+        //         }
+
+        //         /**
+        //          $stringifiedAnnotationEntries
+        //          */
+        //         private function __construct(
+        //             $stringifiedConstructorProperties
+        //         ){}
+        //     }
+        //     PHP;
         return <<<PHP
             class {$className} {
-                /**
-                 $stringifiedAnnotationEntries
-                 */
-                public static function create(
-                    $stringifiedCreateProperties
-                ):self {
-                    return new self(
-                        $stringifiedNewSelfParameters
-                    );
-                }
-
                 /**
                  $stringifiedAnnotationEntries
                  */
