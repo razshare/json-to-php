@@ -15,7 +15,7 @@ use CatPaw\Core\Unsafe;
  */
 function main(#[Arguments] array $arguments = []):Unsafe {
     if (count($arguments) < 1) {
-        return error("Input and output arguments are required, for example `php jtp.phar Payload.json`.");
+        return error("Input arguments is required, for example `php jtp.phar Payload.json`.");
     }
     
     [$input] = $arguments;
