@@ -32,7 +32,7 @@ function main(#[Arguments] array $arguments = []):Unsafe {
 
     foreach ($flat as $inputFileName) {
         if (!preg_match('/(\w+)\.json$/', $inputFileName, $matches)) {
-            return error("Invalid file name for $inputFileName, please make sure each file name has the `.json` and the name is a valid php class name.");
+            return error("Invalid file name for $inputFileName, please make sure each file name has the `.json` extension and the name is a valid php class name.");
         } 
         $className = $matches[1];
         $output    = preg_replace('/\.json$/', '.php', $inputFileName);
