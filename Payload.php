@@ -1,4 +1,29 @@
 <?php
+class Payload {
+    /**
+     * @var string $description
+     * @var Account $account
+     */
+    public static function create(
+        string $description,
+        Account $account,
+    ):self {
+        return new self(
+            description:$description,
+            account:$account,
+        );
+    }
+
+    /**
+     * @var string $description
+     * @var Account $account
+     */
+    private function __construct(
+        public string $description,
+        public Account $account,
+    ){}
+}
+
 class Account {
     /**
      * @var string $username

@@ -17,30 +17,49 @@ use CatPaw\Core\Unsafe;
  * @return void
  */
 function main(#[Arguments] array $arguments = []):Unsafe {
-    if (count($arguments) < 2) {
-        return error("Input and output arguments are required, for example `php jtp.phar input.json output.php`.");
+    if (count($arguments) < 1) {
+        return error("Input and output arguments are required, for example `php jtp.phar Payload.json`.");
     }
     
-    [$input, $output] = $arguments;
+    [$input] = $arguments;
 
-    echo "Parsing json from $input...\n";
 
-    $definitions = jsonToPhp($input)->try($error);
-    if ($error) {
-        return error($error);
+    if (isDirectory($input)) {
+        $flat = Directory::flat($input)->try($error);
+        if ($error) {
+            return error($error);
+        }
+    } else {
+        $flat = [$input];
     }
 
-    $file = File::open($output, 'w+')->try($error);
-    if ($error) {
-        return error($error);
+    foreach ($flat as $inputFileName) {
+        if (!preg_match('/(\w+)\.json$/', $inputFileName, $matches)) {
+            return error("Invalid file name for $inputFileName, please make sure each file name has the `.json` and the name is a valid php class name.");
+        } 
+        $className = $matches[1];
+        $output    = preg_replace('/\.json$/', '.php', $inputFileName);
+        $content   = jsonToPhp(inputFileName:$inputFileName, className:$className)->try($error);
+        if ($error) {
+            return error($error);
+        }
+    
+        echo "Parsing json from $inputFileName...\n";
+
+
+        $file = File::open($output, 'w+')->try($error);
+        if ($error) {
+            return error($error);
+        }
+    
+        echo "Writing definitions to $output...\n";
+    
+        $file->write("<?php\n$content")->await()->try($error);
+        if ($error) {
+            return error($error);
+        }
     }
 
-    echo "Writing definitions to $output...\n";
-
-    $file->write("<?php\n$definitions")->await()->try($error);
-    if ($error) {
-        return error($error);
-    }
 
     echo "Done.\n";
 
@@ -50,25 +69,12 @@ function main(#[Arguments] array $arguments = []):Unsafe {
 
 /**
  * 
- * @param  string         $fileName
+ * @param  string         $inputFileName
+ * @param  string         $className
  * @return Unsafe<string>
  */
-function jsonToPhp(string $fileName):Unsafe {
-    if (isDirectory($fileName)) {
-        $flat = Directory::flat($fileName)->try($error);
-        if ($error) {
-            return error($error);
-        }
-        foreach ($flat as $fileName) {
-            jsonToPhp($fileName)->try($error);
-            if ($error) {
-                return error($error);
-            }
-        }
-        return ok();
-    }
-
-    $json = File::readJson(stdClass::class, $fileName)->try($error);
+function jsonToPhp(string $inputFileName, string $className):Unsafe {
+    $json = File::readJson(stdClass::class, $inputFileName)->try($error);
     if ($error) {
         return error($error);
     }
@@ -76,22 +82,29 @@ function jsonToPhp(string $fileName):Unsafe {
     $customProperties = createCustomPropertiesFromJson(prefix:'', json:$json);
 
     /** @var array<CustomClassProperty> */
-    $subClasses = [];
+    $nestedCustomProperties = [];
 
     foreach ($customProperties as $customProperty) {
         if ($customProperty instanceof CustomClassProperty) {
-            $subClassesLocal = CustomClassProperty::findSubClasses($customProperty);
-            $subClasses      = [...$subClasses, ...$subClassesLocal];
+            $subClassesLocal        = CustomClassProperty::findNestedCustomProperties($customProperty);
+            $nestedCustomProperties = [...$nestedCustomProperties, ...$subClassesLocal];
         }
     }
 
-    $customProperties = [...$customProperties, ...$subClasses];
+    $allCustomProperties = [...$customProperties, ...$nestedCustomProperties];
 
     $result = '';
 
-    foreach ($customProperties as $customClassProperty) {
+    foreach ($allCustomProperties as $customClassProperty) {
+        if ($customClassProperty instanceof CustomPrimitiveProperty) {
+            continue;
+        }
         $result .= $customClassProperty->getDefinition().PHP_EOL.PHP_EOL;
     }
+
+    $main   = CustomClassProperty::create($className, 'root', $customProperties);
+    $result = $main->getDefinition().PHP_EOL.PHP_EOL.$result;
+    
 
     return ok($result);
 }
@@ -201,7 +214,7 @@ readonly class CustomClassProperty {
      * @param  CustomClassProperty        $customClassProperty
      * @return array<CustomClassProperty>
      */
-    public static function findSubClasses(CustomClassProperty $customClassProperty):array {
+    public static function findNestedCustomProperties(CustomClassProperty $customClassProperty):array {
         $customProperties = [];
         foreach ($customClassProperty->properties as $property) {
             if ($property instanceof CustomArrayProperty) {
@@ -220,7 +233,7 @@ readonly class CustomClassProperty {
      * @param  string                                             $className
      * @param  string                                             $propertyName
      * @param  array<CustomPrimitiveProperty|CustomClassProperty> $properties
-     * @return CustomClass
+     * @return CustomClassProperty
      */
     public static function create(
         string $className,
