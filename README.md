@@ -1,3 +1,7 @@
+# What is this?
+
+This is a cli tool to convert Json data to Php class definitions.
+
 # Usage example
 
 Given the following `Payload.json` file
@@ -112,4 +116,5 @@ class AccountArticle {
 ```
 
 > [!NOTE]
-> The resulting Php file is not formatted properly, you may want to run php-cs-fixer on it.
+> - The input file name (excluding the `.json` extension, of course) must be a `valid` Php `class name`.
+> - The resulting Php file is not formatted properly, you may want to run php-cs-fixer on it.
