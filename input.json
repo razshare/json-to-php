@@ -1,0 +1,13 @@
+{
+  "account": {
+    "username": "loopcake",
+    "email": "tangent.jotey@gmail.com",
+    "created_at": 1212412351234,
+    "modified_at": 1212412351235,
+    "article": [
+      {
+        "title": "my article"
+      }
+    ]
+  }
+}
