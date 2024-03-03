@@ -1,14 +1,11 @@
 <?php
 
 use function Amp\File\isDirectory;
-
 use CatPaw\Core\Attributes\Arguments;
 use CatPaw\Core\Directory;
 use function CatPaw\Core\error;
-
 use CatPaw\Core\File;
 use function CatPaw\Core\ok;
-
 use CatPaw\Core\Unsafe;
 
 /**

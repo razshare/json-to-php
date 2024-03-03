@@ -7,19 +7,37 @@ This is a cli tool to convert Json data to Php class definitions.
 Given the following `Payload.json` file
 ```json
 {
-  "description": "test",
-  "account": {
-    "username": "loopcake",
-    "email": "tangent.jotey@gmail.com",
-    "created_at": 1212412351234,
-    "modified_at": 1212412351235,
-    "article": [
-      {
-        "title": "my article"
-      }
-    ]
-  }
+  "id": 1,
+  "node_id": "MDEyOklzc3VlQ29tbWVudDE=",
+  "url": "https://api.github.com/repos/octocat/Hello-World/issues/comments/1",
+  "html_url": "https://github.com/octocat/Hello-World/issues/1347#issuecomment-1",
+  "body": "Me too",
+  "user": {
+    "login": "octocat",
+    "id": 1,
+    "node_id": "MDQ6VXNlcjE=",
+    "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/octocat",
+    "html_url": "https://github.com/octocat",
+    "followers_url": "https://api.github.com/users/octocat/followers",
+    "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+    "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+    "organizations_url": "https://api.github.com/users/octocat/orgs",
+    "repos_url": "https://api.github.com/users/octocat/repos",
+    "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/octocat/received_events",
+    "type": "User",
+    "site_admin": false
+  },
+  "created_at": "2011-04-14T16:00:49Z",
+  "updated_at": "2011-04-14T16:00:49Z",
+  "issue_url": "https://api.github.com/repos/octocat/Hello-World/issues/1347",
+  "author_association": "COLLABORATOR"
 }
+
 ```
 Run the following
 
@@ -31,86 +49,171 @@ To obtain a `Payload.php` file
 <?php
 class Payload {
     /**
-     * @var string $description
-     * @var Account $account
+     * @var int $id
+     * @var string $nodeId
+     * @var string $url
+     * @var string $htmlUrl
+     * @var string $body
+     * @var User $user
+     * @var string $createdAt
+     * @var string $updatedAt
+     * @var string $issueUrl
+     * @var string $authorAssociation
      */
     public static function create(
-        string $description,
-        Account $account,
+        int $id,
+        string $nodeId,
+        string $url,
+        string $htmlUrl,
+        string $body,
+        User $user,
+        string $createdAt,
+        string $updatedAt,
+        string $issueUrl,
+        string $authorAssociation,
     ):self {
         return new self(
-            description:$description,
-            account:$account,
-        );
-    }
-
-    /**
-     * @var string $description
-     * @var Account $account
-     */
-    private function __construct(
-        public string $description,
-        public Account $account,
-    ){}
-}
-
-class Account {
-    /**
-     * @var string $username
-     * @var string $email
-     * @var int $createdAt
-     * @var int $modifiedAt
-     * @var array<AccountArticle> $article
-     */
-    public static function create(
-        string $username,
-        string $email,
-        int $createdAt,
-        int $modifiedAt,
-        array $article
-    ):self {
-        return new self(
-            username:$username,
-            email:$email,
+            id:$id,
+            nodeId:$nodeId,
+            url:$url,
+            htmlUrl:$htmlUrl,
+            body:$body,
+            user:$user,
             createdAt:$createdAt,
-            modifiedAt:$modifiedAt,
-            article:$article,
+            updatedAt:$updatedAt,
+            issueUrl:$issueUrl,
+            authorAssociation:$authorAssociation,
         );
     }
 
     /**
-     * @var string $username
-     * @var string $email
-     * @var int $createdAt
-     * @var int $modifiedAt
-     * @var array<AccountArticle> $article
+     * @var int $id
+     * @var string $nodeId
+     * @var string $url
+     * @var string $htmlUrl
+     * @var string $body
+     * @var User $user
+     * @var string $createdAt
+     * @var string $updatedAt
+     * @var string $issueUrl
+     * @var string $authorAssociation
      */
     private function __construct(
-        public string $username,
-        public string $email,
-        public int $createdAt,
-        public int $modifiedAt,
-        public array $article
+        public int $id,
+        public string $nodeId,
+        public string $url,
+        public string $htmlUrl,
+        public string $body,
+        public User $user,
+        public string $createdAt,
+        public string $updatedAt,
+        public string $issueUrl,
+        public string $authorAssociation,
     ){}
 }
 
-class AccountArticle {
+class User {
     /**
-     * @var string $title
+     * @var string $login
+     * @var int $id
+     * @var string $nodeId
+     * @var string $avatarUrl
+     * @var string $gravatarId
+     * @var string $url
+     * @var string $htmlUrl
+     * @var string $followersUrl
+     * @var string $followingUrl
+     * @var string $gistsUrl
+     * @var string $starredUrl
+     * @var string $subscriptionsUrl
+     * @var string $organizationsUrl
+     * @var string $reposUrl
+     * @var string $eventsUrl
+     * @var string $receivedEventsUrl
+     * @var string $type
+     * @var bool $siteAdmin
      */
     public static function create(
-        string $title,
+        string $login,
+        int $id,
+        string $nodeId,
+        string $avatarUrl,
+        string $gravatarId,
+        string $url,
+        string $htmlUrl,
+        string $followersUrl,
+        string $followingUrl,
+        string $gistsUrl,
+        string $starredUrl,
+        string $subscriptionsUrl,
+        string $organizationsUrl,
+        string $reposUrl,
+        string $eventsUrl,
+        string $receivedEventsUrl,
+        string $type,
+        bool $siteAdmin,
     ):self {
         return new self(
-            title:$title,
+            login:$login,
+            id:$id,
+            nodeId:$nodeId,
+            avatarUrl:$avatarUrl,
+            gravatarId:$gravatarId,
+            url:$url,
+            htmlUrl:$htmlUrl,
+            followersUrl:$followersUrl,
+            followingUrl:$followingUrl,
+            gistsUrl:$gistsUrl,
+            starredUrl:$starredUrl,
+            subscriptionsUrl:$subscriptionsUrl,
+            organizationsUrl:$organizationsUrl,
+            reposUrl:$reposUrl,
+            eventsUrl:$eventsUrl,
+            receivedEventsUrl:$receivedEventsUrl,
+            type:$type,
+            siteAdmin:$siteAdmin,
         );
     }
 
     /**
-     * @var string $title
+     * @var string $login
+     * @var int $id
+     * @var string $nodeId
+     * @var string $avatarUrl
+     * @var string $gravatarId
+     * @var string $url
+     * @var string $htmlUrl
+     * @var string $followersUrl
+     * @var string $followingUrl
+     * @var string $gistsUrl
+     * @var string $starredUrl
+     * @var string $subscriptionsUrl
+     * @var string $organizationsUrl
+     * @var string $reposUrl
+     * @var string $eventsUrl
+     * @var string $receivedEventsUrl
+     * @var string $type
+     * @var bool $siteAdmin
      */
     private function __construct(
-        public string $title,
+        public string $login,
+        public int $id,
+        public string $nodeId,
+        public string $avatarUrl,
+        public string $gravatarId,
+        public string $url,
+        public string $htmlUrl,
+        public string $followersUrl,
+        public string $followingUrl,
+        public string $gistsUrl,
+        public string $starredUrl,
+        public string $subscriptionsUrl,
+        public string $organizationsUrl,
+        public string $reposUrl,
+        public string $eventsUrl,
+        public string $receivedEventsUrl,
+        public string $type,
+        public bool $siteAdmin,
     ){}
 }
 ```
