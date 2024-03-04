@@ -28,6 +28,7 @@ class Payload {
 
 class User {
     /**
+     * @var array<UserRoles> $roles
      * @var string $login
      * @var int $id
      * @var string $nodeId
@@ -48,6 +49,7 @@ class User {
      * @var bool $siteAdmin
      */
     private function __construct(
+        public array $roles,
         public string $login,
         public int $id,
         public string $nodeId,
@@ -66,6 +68,15 @@ class User {
         public string $receivedEventsUrl,
         public string $type,
         public bool $siteAdmin,
+    ){}
+}
+
+class UserRoles {
+    /**
+     * @var string $type
+     */
+    private function __construct(
+        public string $type,
     ){}
 }
 

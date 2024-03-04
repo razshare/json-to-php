@@ -5,6 +5,11 @@
   "html_url": "https://github.com/octocat/Hello-World/issues/1347#issuecomment-1",
   "body": "Me too",
   "user": {
+    "roles": [
+      {
+        "type": "User"
+      }
+    ],
     "login": "octocat",
     "id": 1,
     "node_id": "MDQ6VXNlcjE=",
