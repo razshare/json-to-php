@@ -1,82 +1,23 @@
 <?php
 class Payload {
     /**
-     * @var int $id
-     * @var string $nodeId
-     * @var string $url
-     * @var string $htmlUrl
-     * @var string $body
-     * @var User $user
-     * @var string $createdAt
-     * @var string $updatedAt
-     * @var string $issueUrl
-     * @var string $authorAssociation
+     * @var string $username
+     * @var array<Article> $article
      */
     private function __construct(
-        public int $id,
-        public string $nodeId,
-        public string $url,
-        public string $htmlUrl,
-        public string $body,
-        public User $user,
-        public string $createdAt,
-        public string $updatedAt,
-        public string $issueUrl,
-        public string $authorAssociation,
+        public string $username,
+        public array $article,
     ){}
 }
 
-class User {
+class Article {
     /**
-     * @var array<UserRoles> $roles
-     * @var string $login
-     * @var int $id
-     * @var string $nodeId
-     * @var string $avatarUrl
-     * @var string $gravatarId
-     * @var string $url
-     * @var string $htmlUrl
-     * @var string $followersUrl
-     * @var string $followingUrl
-     * @var string $gistsUrl
-     * @var string $starredUrl
-     * @var string $subscriptionsUrl
-     * @var string $organizationsUrl
-     * @var string $reposUrl
-     * @var string $eventsUrl
-     * @var string $receivedEventsUrl
-     * @var string $type
-     * @var bool $siteAdmin
+     * @var string $title
+     * @var string $description
      */
     private function __construct(
-        public array $roles,
-        public string $login,
-        public int $id,
-        public string $nodeId,
-        public string $avatarUrl,
-        public string $gravatarId,
-        public string $url,
-        public string $htmlUrl,
-        public string $followersUrl,
-        public string $followingUrl,
-        public string $gistsUrl,
-        public string $starredUrl,
-        public string $subscriptionsUrl,
-        public string $organizationsUrl,
-        public string $reposUrl,
-        public string $eventsUrl,
-        public string $receivedEventsUrl,
-        public string $type,
-        public bool $siteAdmin,
-    ){}
-}
-
-class UserRoles {
-    /**
-     * @var string $type
-     */
-    private function __construct(
-        public string $type,
+        public string $title,
+        public string $description,
     ){}
 }
 

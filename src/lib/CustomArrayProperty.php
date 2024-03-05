@@ -18,6 +18,9 @@ readonly class CustomArrayProperty {
     ) {
     }
 
+    public function getDefinition(): string {
+        return $this->item->getDefinition();
+    }
     private static function nest(string $value, int $times) {
         $value = "array<$value>";
         $times--;
@@ -31,9 +34,9 @@ readonly class CustomArrayProperty {
     }
 
     public function toStringForAnnotation() {
-        if($this->item instanceof CustomClassProperty){
-            $typePrefix      = stringSnakeToPascal($this->item->prefix);
-        }else {
+        if ($this->item instanceof CustomClassProperty) {
+            $typePrefix = stringSnakeToPascal($this->item->prefix);
+        } else {
             $typePrefix = '';
         }
         
