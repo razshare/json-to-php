@@ -15,7 +15,7 @@ readonly class CustomClassProperty {
             }
 
             if ($property instanceof CustomClassProperty) {
-                $customProperties[$property->name] = $property;
+                $customProperties[$property->prefix.$property->name] = $property;
             }
         }
         return $customProperties;
@@ -23,9 +23,9 @@ readonly class CustomClassProperty {
 
     /**
      * 
-     * @param  string                                             $prefix Prefix to add to the type and name.
-     * @param  string                                             $type Type of the property.
-     * @param  string                                             $name Name of the property.
+     * @param  string                                             $prefix     Prefix to add to the type and name.
+     * @param  string                                             $type       Type of the property.
+     * @param  string                                             $name       Name of the property.
      * @param  array<CustomPrimitiveProperty|CustomClassProperty> $properties
      * @return CustomClassProperty
      */
