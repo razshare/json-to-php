@@ -1,0 +1,48 @@
+{
+  "name": "user-1",
+  "article": [
+    {
+      "title": "my-first-article",
+      "created-at": 1710112511,
+      "content": "this is article content",
+      "comment": [
+        [
+          {
+            "author": {
+              "name": "user-2"
+            },
+            "created-at": 1710112511,
+            "content": "this is comment 1 content"
+          },
+          {
+            "author": {
+              "name": "user-3"
+            },
+            "created-at": 1710112511,
+            "content": "this is comment 2 content"
+          }
+        ]
+      ]
+    },
+    {
+      "title": "my-first-article",
+      "created-at": 1710112511,
+      "comments": [
+        {
+          "author": {
+            "name": "user-4"
+          },
+          "created-at": 1710112511,
+          "content": "this is comment 3 content"
+        },
+        {
+          "author": {
+            "name": "user-5"
+          },
+          "created-at": 1710112511,
+          "content": "this is comment 4 content"
+        }
+      ]
+    }
+  ]
+}

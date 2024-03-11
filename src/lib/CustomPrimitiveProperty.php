@@ -1,12 +1,12 @@
 <?php
 namespace App;
 
-readonly class CustomPrimitiveProperty {
+readonly class CustomPrimitiveProperty implements CustomProperty {
     /**
      * 
-     * @param  string $type Type of the property.
-     * @param  string $name Name of the property.
-     * @return CustomPrimitiveProperty 
+     * @param  string                  $type Type of the property.
+     * @param  string                  $name Name of the property.
+     * @return CustomPrimitiveProperty
      */
     public static function create(
         string $type,
@@ -23,9 +23,13 @@ readonly class CustomPrimitiveProperty {
     ) {
     }
 
+    public function getDefinition():string {
+        return '';
+    }
+
     public function toStringForAnnotation() {
         return <<<PHP
-             * @var {$this->type} \${$this->name}
+             * @param {$this->type} \${$this->name}
             PHP;
     }
 

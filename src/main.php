@@ -1,12 +1,12 @@
 <?php
 
 use function Amp\File\isDirectory;
-use function App\stringSnakeToCamel;
-use function App\stringSnakeToPascal;
-
 use App\CustomArrayProperty;
 use App\CustomClassProperty;
 use App\CustomPrimitiveProperty;
+
+use function App\stringSnakeToCamel;
+use function App\stringSnakeToPascal;
 use CatPaw\Core\Attributes\Arguments;
 use CatPaw\Core\Attributes\Option;
 use CatPaw\Core\Directory;
@@ -21,8 +21,10 @@ use CatPaw\Core\Unsafe;
  * @return void
  */
 function main(
-    #[Arguments] array $arguments = [],
-    #[Option("--starts-with")] string $startWith = '',
+    #[Arguments]
+    array $arguments = [],
+    #[Option("--starts-with")]
+    string $startWith = '',
 ):Unsafe {
     if (count($arguments) < 1) {
         return error("Input argument is required, for example `php jtp.phar Payload.json`.");
@@ -42,12 +44,12 @@ function main(
 
     foreach ($flat as $inputFileName) {
         $baseInputFilename = basename($inputFileName);
-        if(!str_starts_with($baseInputFilename, $startWith)){
+        if (!str_starts_with($baseInputFilename, $startWith)) {
             continue;
         }
 
         if (!preg_match('/(\w+)\.json$/', $inputFileName, $matches)) {
-            if($isDirectory){
+            if ($isDirectory) {
                 // Skip error message if the original input was a directory.
                 continue;
             }
@@ -95,47 +97,38 @@ function jsonToPhp(string $inputFileName, string $className):Unsafe {
         return error($error);
     }
 
-    $customProperties = findCustomPropertiesByJson(prefix:'', json:$json);
+    $result                = '';
+    $onCustomClassProperty = function(CustomClassProperty $customProperty) use (&$result, &$onCustomClassProperty) {
+        $result .= $customProperty->getDefinition($onCustomClassProperty).PHP_EOL.PHP_EOL;
+    };
 
-    /** @var array<CustomClassProperty> */
-    $nestedCustomProperties = [];
+    $customProperties = findCustomPropertiesByJson(
+        prefix:'',
+        json:$json,
+        onCustomClassProperty: $onCustomClassProperty,
+    );
 
-    foreach ($customProperties as $customProperty) {
-        if ($customProperty instanceof CustomClassProperty) {
-            $subClassesLocal        = CustomClassProperty::findNestedCustomPropertiesByCustomProperty($customProperty);
-            $nestedCustomProperties = [...$nestedCustomProperties, ...$subClassesLocal];
-        }
-    }
-
-    $allCustomProperties = [...$customProperties, ...$nestedCustomProperties];
-
-    $result = '';
-
-    foreach ($allCustomProperties as $customClassProperty) {
-        if ($customClassProperty instanceof CustomPrimitiveProperty) {
-            continue;
-        }
-        $result .= $customClassProperty->getDefinition().PHP_EOL.PHP_EOL;
-    }
-
-    $main   = CustomClassProperty::create(prefix:'', type:$className, name:'root', properties:$customProperties);
-    $result = $main->getDefinition().PHP_EOL.PHP_EOL.$result;
+    $main = CustomClassProperty::create(prefix:'', type:$className, name:'root', properties:$customProperties);
     
+    $result = $main->getDefinition().PHP_EOL.PHP_EOL.$result;
+
     return ok($result);
 }
 
 /**
  * 
- * @param  string                                                          $prefix Prefix used for property name a class name.
- * @param  string                                                          $name   Name to assign to the property
- * @param  mixed                                                           $json   Json to evaluate.
- * @param  int                                                             $nested How deep the given `$json` is nested an array.
+ * @param  string                                                          $prefix               Prefix used for property name a class name.
+ * @param  string                                                          $name                 Name to assign to the property
+ * @param  mixed                                                           $json                 Json to evaluate.
+ * @param  callable(CustomClassProperty):void                              $onClassPropertyFound
+ * @param  int                                                             $nested               How deep the given `$json` is nested an array.
  * @return CustomPrimitiveProperty|CustomClassProperty|CustomArrayProperty
  */
 function findCustomPropertyByJson(
     string $prefix,
     string $name,
     mixed $json,
+    callable $onClassPropertyFound,
     int $nested = 0,
 ):CustomPrimitiveProperty|CustomClassProperty|CustomArrayProperty {
     if (is_array($json)) {
@@ -144,6 +137,7 @@ function findCustomPropertyByJson(
             prefix:$prefix,
             json:$firstItem,
             name:$name,
+            onClassPropertyFound: $onClassPropertyFound,
         );
         while ($customProperty instanceof CustomArrayProperty) {
             $nested++;
@@ -151,15 +145,18 @@ function findCustomPropertyByJson(
         }
         return CustomArrayProperty::create(item:$customProperty, nested: ++$nested);
     } else if (is_object($json)) {
-        return CustomClassProperty::create(
+        $customClassProperty = CustomClassProperty::create(
             prefix:$prefix,
             type:stringSnakeToPascal($name),
             name:stringSnakeToCamel($name),
             properties:findCustomPropertiesByJson(
                 prefix:"{$name}_",
                 json:$json,
+                onCustomClassProperty: $onClassPropertyFound,
             ),
         );
+        $onClassPropertyFound($customClassProperty);
+        return $customClassProperty;
     } else {
         return match (true) {
             is_string($json) => CustomPrimitiveProperty::create(type:'string', name:stringSnakeToCamel($name)),
@@ -175,11 +172,13 @@ function findCustomPropertyByJson(
  * 
  * @param  object                                                                        $json
  * @param  array                                                                         $classes
+ * @param  callable(CustomClassProperty):void                                            $onCustomClassProperty
  * @return array<string,CustomPrimitiveProperty|CustomClassProperty|CustomArrayProperty>
  */
 function findCustomPropertiesByJson(
     string $prefix,
     object $json,
+    callable $onCustomClassProperty,
 ):array {
     /** @var array<string,CustomPrimitiveProperty|CustomClassProperty|CustomArrayProperty> */
     $properties = [];
@@ -190,6 +189,7 @@ function findCustomPropertiesByJson(
             json:$value,
             name:$name,
             prefix:$prefix,
+            onClassPropertyFound: $onCustomClassProperty,
         );
     }
     return $properties;

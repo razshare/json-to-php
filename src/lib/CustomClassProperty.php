@@ -1,7 +1,7 @@
 <?php
 namespace App;
 
-readonly class CustomClassProperty {
+readonly class CustomClassProperty implements CustomProperty {
     /**
      * 
      * @param  CustomClassProperty        $customClassProperty
@@ -138,7 +138,7 @@ readonly class CustomClassProperty {
     public function toStringForAnnotation() {
         $typePrefix = stringSnakeToPascal($this->prefix);
         return <<<PHP
-             * @var $typePrefix{$this->type} \${$this->name}
+             * @param $typePrefix{$this->type} \${$this->name}
             PHP;
     }
 

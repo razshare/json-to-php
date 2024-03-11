@@ -1,7 +1,7 @@
 <?php
 namespace App;
 
-readonly class CustomArrayProperty {
+readonly class CustomArrayProperty implements CustomProperty {
     public static function create(
         CustomPrimitiveProperty|CustomClassProperty $item,
         int $nested,
@@ -45,7 +45,7 @@ readonly class CustomArrayProperty {
             times:$this->nested,
         );
         return <<<PHP
-             * @var $nestedClassName \${$this->item->name}
+             * @param $nestedClassName \${$this->item->name}
             PHP;
     }
 
