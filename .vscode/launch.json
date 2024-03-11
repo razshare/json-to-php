@@ -10,7 +10,7 @@
       "request": "launch",
       "program": "${workspaceRoot}/bin/start",
       "args": [
-        "./types/User.json",
+        "./types/Payload.json",
         "--libraries='./src/lib'",
         "--entry='./src/main.php'"
       ],

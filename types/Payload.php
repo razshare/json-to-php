@@ -1,15 +1,15 @@
 <?php
 class Payload {
     /**
-     * @var string $url
-     * @var string $sha
-     * @var string $nodeId
-     * @var string $htmlUrl
-     * @var string $commentsUrl
-     * @var Commit $commit
-     * @var Author $author
-     * @var Committer $committer
-     * @var array<Parents> $parents
+     * @param string $url
+     * @param string $sha
+     * @param string $nodeId
+     * @param string $htmlUrl
+     * @param string $commentsUrl
+     * @param Commit $commit
+     * @param Author $author
+     * @param Committer $committer
+     * @param array<Parents> $parents
      */
     private function __construct(
         public string $url,
@@ -24,15 +24,67 @@ class Payload {
     ){}
 }
 
+class CommitAuthor {
+    /**
+     * @param string $name
+     * @param string $email
+     * @param string $date
+     */
+    private function __construct(
+        public string $name,
+        public string $email,
+        public string $date,
+    ){}
+}
+
+class CommitCommitter {
+    /**
+     * @param string $name
+     * @param string $email
+     * @param string $date
+     */
+    private function __construct(
+        public string $name,
+        public string $email,
+        public string $date,
+    ){}
+}
+
+class CommitTree {
+    /**
+     * @param string $url
+     * @param string $sha
+     */
+    private function __construct(
+        public string $url,
+        public string $sha,
+    ){}
+}
+
+class CommitVerification {
+    /**
+     * @param bool $verified
+     * @param string $reason
+     * @param mixed $signature
+     * @param mixed $payload
+     */
+    private function __construct(
+        public bool $verified,
+        public string $reason,
+        public mixed $signature,
+        public mixed $payload,
+    ){}
+}
+
 class Commit {
     /**
-     * @var string $url
-     * @var CommitAuthor $author
-     * @var CommitCommitter $committer
-     * @var string $message
-     * @var CommitTree $tree
-     * @var int $commentCount
-     * @var CommitVerification $verification
+     * @param string $url
+     * @param CommitAuthor $author
+     * @param CommitCommitter $committer
+     * @param string $message
+     * @param CommitTree $tree
+     * @param int $commentCount
+     * @param CommitVerification $verification
      */
     private function __construct(
         public string $url,
@@ -47,24 +99,24 @@ class Commit {
 
 class Author {
     /**
-     * @var string $login
-     * @var int $id
-     * @var string $nodeId
-     * @var string $avatarUrl
-     * @var string $gravatarId
-     * @var string $url
-     * @var string $htmlUrl
-     * @var string $followersUrl
-     * @var string $followingUrl
-     * @var string $gistsUrl
-     * @var string $starredUrl
-     * @var string $subscriptionsUrl
-     * @var string $organizationsUrl
-     * @var string $reposUrl
-     * @var string $eventsUrl
-     * @var string $receivedEventsUrl
-     * @var string $type
-     * @var bool $siteAdmin
+     * @param string $login
+     * @param int $id
+     * @param string $nodeId
+     * @param string $avatarUrl
+     * @param string $gravatarId
+     * @param string $url
+     * @param string $htmlUrl
+     * @param string $followersUrl
+     * @param string $followingUrl
+     * @param string $gistsUrl
+     * @param string $starredUrl
+     * @param string $subscriptionsUrl
+     * @param string $organizationsUrl
+     * @param string $reposUrl
+     * @param string $eventsUrl
+     * @param string $receivedEventsUrl
+     * @param string $type
+     * @param bool $siteAdmin
      */
     private function __construct(
         public string $login,
@@ -90,24 +142,24 @@ class Author {
 
 class Committer {
     /**
-     * @var string $login
-     * @var int $id
-     * @var string $nodeId
-     * @var string $avatarUrl
-     * @var string $gravatarId
-     * @var string $url
-     * @var string $htmlUrl
-     * @var string $followersUrl
-     * @var string $followingUrl
-     * @var string $gistsUrl
-     * @var string $starredUrl
-     * @var string $subscriptionsUrl
-     * @var string $organizationsUrl
-     * @var string $reposUrl
-     * @var string $eventsUrl
-     * @var string $receivedEventsUrl
-     * @var string $type
-     * @var bool $siteAdmin
+     * @param string $login
+     * @param int $id
+     * @param string $nodeId
+     * @param string $avatarUrl
+     * @param string $gravatarId
+     * @param string $url
+     * @param string $htmlUrl
+     * @param string $followersUrl
+     * @param string $followingUrl
+     * @param string $gistsUrl
+     * @param string $starredUrl
+     * @param string $subscriptionsUrl
+     * @param string $organizationsUrl
+     * @param string $reposUrl
+     * @param string $eventsUrl
+     * @param string $receivedEventsUrl
+     * @param string $type
+     * @param bool $siteAdmin
      */
     private function __construct(
         public string $login,
@@ -133,64 +185,12 @@ class Committer {
 
 class Parents {
     /**
-     * @var string $url
-     * @var string $sha
+     * @param string $url
+     * @param string $sha
      */
     private function __construct(
         public string $url,
         public string $sha,
-    ){}
-}
-
-class CommitAuthor {
-    /**
-     * @var string $name
-     * @var string $email
-     * @var string $date
-     */
-    private function __construct(
-        public string $name,
-        public string $email,
-        public string $date,
-    ){}
-}
-
-class CommitCommitter {
-    /**
-     * @var string $name
-     * @var string $email
-     * @var string $date
-     */
-    private function __construct(
-        public string $name,
-        public string $email,
-        public string $date,
-    ){}
-}
-
-class CommitTree {
-    /**
-     * @var string $url
-     * @var string $sha
-     */
-    private function __construct(
-        public string $url,
-        public string $sha,
-    ){}
-}
-
-class CommitVerification {
-    /**
-     * @var bool $verified
-     * @var string $reason
-     * @var mixed $signature
-     * @var mixed $payload
-     */
-    private function __construct(
-        public bool $verified,
-        public string $reason,
-        public mixed $signature,
-        public mixed $payload,
     ){}
 }
 
